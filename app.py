@@ -38,6 +38,12 @@ job_url = st.text_input(
     placeholder="https://www.linkedin.com/jobs/view/..."
 )
 
+jd_text = st.text_area(
+    label="Or paste the Job Description directly (optional — use if URL scraping fails)",
+    placeholder="Paste the full job description here...",
+    height=200
+)
+
 resume_file = st.file_uploader(
     label="Upload your Resume (PDF)",
     type=["pdf"]
@@ -69,7 +75,7 @@ if run_button:
         try:
             status_container = st.empty()
 
-            for update in run_agent(job_url, resume_path=tmp_path):
+            for update in run_agent(job_url, resume_path=tmp_path, jd_text=jd_text):
                 if update["type"] == "status":
                     status_container.info(update["message"])
                 elif update["type"] == "report":

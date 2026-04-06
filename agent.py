@@ -119,13 +119,16 @@ Here is the candidate's resume:
 {resume_text}"""
 
 
-def run_agent(job_url: str, resume_path: str = "resume.pdf") -> str:
+def run_agent(job_url: str, resume_path: str = "resume.pdf", jd_text: str = ""):
     resume_text = load_resume_text(resume_path)
     system_prompt = build_system_prompt(resume_text)
 
-    messages = [
-        {"role": "user", "content": f"Prepare me for this job: {job_url}"}
-    ]
+    if jd_text:
+        content = f"Prepare me for this job: {job_url}\n\nHere is the job description in case the URL scrape fails or returns thin content:\n{jd_text}"
+    else:
+        content = f"Prepare me for this job: {job_url}"
+
+    messages = [{"role": "user", "content": content}]
 
     yield {"type": "status", "message": "🔍 Starting agent..."}
 
