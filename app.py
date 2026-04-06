@@ -33,16 +33,25 @@ if "chat_history" not in st.session_state:
 if "job_context" not in st.session_state:
     st.session_state.job_context = ""
 
-job_url = st.text_input(
-    label="Job Posting URL",
-    placeholder="https://www.linkedin.com/jobs/view/..."
+input_mode = st.radio(
+    "How do you want to provide the job?",
+    ["Paste a URL", "Paste the Job Description directly"],
+    horizontal=True
 )
 
-jd_text = st.text_area(
-    label="Or paste the Job Description directly (optional — use if URL scraping fails)",
-    placeholder="Paste the full job description here...",
-    height=200
-)
+if input_mode == "Paste a URL":
+    job_url = st.text_input(
+        label="Job Posting URL",
+        placeholder="https://www.linkedin.com/jobs/view/..."
+    )
+    jd_text = ""
+else:
+    jd_text = st.text_area(
+        label="Job Description",
+        placeholder="Paste the full job description here...",
+        height=200
+    )
+    job_url = "No URL provided"
 
 resume_file = st.file_uploader(
     label="Upload your Resume (PDF)",
@@ -57,8 +66,8 @@ if run_button:
     if st.session_state.run_count >= 3:
         st.error("You've hit the limit of 3 runs per hour. Come back later or run it locally.")
         st.stop()
-    elif not job_url:
-        st.warning("Please paste a job URL first.")
+    elif not job_url and not jd_text:
+        st.warning("Please provide a job URL or paste the job description.")
     elif not resume_file:
         st.warning("Please upload your resume.")
     else:
