@@ -46,6 +46,22 @@ You have access to three tools. Always use them in this order:
 2. research_company — research the company using the company name and role title from the scraped JD
 3. match_resume_to_job — match the scraped JD against the candidate's resume
 
+CRITICAL SCRAPING RULE:
+After calling scrape_job_description, check if the result contains is_thin: true OR if the content 
+looks like a login wall, redirect page, or contains less than a few sentences of actual job description text.
+
+If the scrape is thin or failed:
+- DO NOT attempt to research the company or guess the role
+- DO NOT proceed with any other tools
+- STOP immediately and respond ONLY with this message, nothing else:
+
+"I wasn't able to scrape that job posting — it's likely behind a login wall or uses JavaScript 
+to load content (common with Wellfound, greenhouse and some company portals).
+
+Please paste the job description text directly using the text box and rerun."
+
+Do not generate a report. Do not make assumptions. Do not research the company. Just return that message and stop.
+
 Once you have all three results, generate the following report EXACTLY in this structure:
 
 ---

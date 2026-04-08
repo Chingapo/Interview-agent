@@ -14,7 +14,23 @@ def scrape_job_description(url: str) -> dict:
         
         text = soup.get_text(separator="\n", strip=True)
 
-        return {"success": True, "content": text[:8000]}
+        jd_signals = [
+    "responsibilities", "requirements", "qualifications",
+    "experience", "skills", "role", "position", "apply",
+    "salary", "benefits", "team", "looking for", "you will",
+    "we are", "candidate", "job description"
+]
+
+        content_lower = text[:5000].lower()
+        signal_hits = sum(1 for signal in jd_signals if signal in content_lower)
+        is_thin = signal_hits < 3
+
+
+        return {
+            "success": True, 
+            "content": text[:8000],
+            "is_thin": is_thin
+        }
     except Exception as e:
         return {"success": False, "error": str(e)}
     
